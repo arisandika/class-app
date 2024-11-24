@@ -68,18 +68,18 @@
                                         <p class="text-sm text-gradient fw-bold">{{ $student->nim }}</p>
                                         <div class="gap-2 d-flex">
                                             <p class="text-sm text-muted">{{ $student->created_at->diffForHumans() }}</p>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn-dots" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
+                                            <div class="btn-group wire:ignore.self">
+                                                <button type="button" class="btn-dots dropdown-toggle" data-bs-toggle="dropdown"
+                                                    aria-expanded="{{ $isDropdownOpen ? 'true' : 'false' }}"
+                                                    wire:click="toggleDropdown">
                                                     <span class=""><x-tabler-dots-vertical width="18" height="18" /></span>
                                                 </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><button class="btn-edit w-100" data-bs-toggle="modal"
-                                                            data-bs-target="#editModal"
-                                                            x-on:click="$wire.edit('{{ $student->id }}')">
-                                                            Edit
-                                                            <x-lucide-pencil-line width="14" height="14" />
-                                                        </button></li>
+                                                <ul class="dropdown-menu {{ $isDropdownOpen ? 'show' : '' }}"">
+                                                                                                    <li><button class=" btn-edit w-100" data-bs-toggle="modal" data-bs-target="#editModal"
+                                                    x-on:click="$wire.edit('{{ $student->id }}')">
+                                                    Edit
+                                                    <x-lucide-pencil-line width="14" height="14" />
+                                                    </button></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -113,3 +113,31 @@
     @include('livewire.home.add-modal')
     @include('livewire.home.edit-modal')
 </div>
+
+@push('scripts')
+    <script>
+        document.addEventListener('livewire:updated', () => {
+            const dropdownToggle = document.querySelector('.btn-dots');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+
+            if (dropdownToggle && dropdownMenu) {
+                dropdownMenu.classList.remove('show');
+                dropdownToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+
+        document.addEventListener('hidden.bs.modal', (event) => {
+            if (event.target.id === 'editModal') {
+
+                const dropdownToggle = document.querySelector('.btn-dots');
+                const dropdownMenu = document.querySelector('.dropdown-menu');
+
+                if (dropdownToggle && dropdownMenu) {
+                    dropdownMenu.classList.remove('show');
+                    dropdownToggle.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+    </script>
+@endpush

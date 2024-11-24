@@ -18,6 +18,7 @@ class Students extends Component
     public $isModalOpen = false;
     protected $accessKey = '221011401774';
     public $student_id;
+    public $isDropdownOpen = false;
 
     public function mount()
     {
@@ -103,11 +104,6 @@ class Students extends Component
         $this->isModalOpen = true;
     }
 
-    public function closeModal()
-    {
-        $this->isModalOpen = false;
-    }
-
     public function store()
     {
         $this->validate($this->rules());
@@ -171,5 +167,16 @@ class Students extends Component
         $this->dispatch('close-modal');
         $this->resetForm();
         return $this->redirect('/', navigate: true);
+    }
+
+    public function toggleDropdown()
+    {
+        $this->isDropdownOpen = !$this->isDropdownOpen;
+    }
+
+    public function clodeModal()
+    {
+        $this->dispatch('close-modal');
+        $this->dispatch('livewire:updated');
     }
 }
